@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Formulário de Empregados</title>
+</head>
+<body>
+    <h1>Formulário de Empregados</h1>
+    <form id="formEmpregado" onsubmit="gravarEmpregado(); return false;">
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" required><br>
+        
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" required><br>
+        
+        <label for="dataAdmissao">Data de Admissão:</label>
+        <input type="text" id="dataAdmissao" required><br>
+        
+        <label for="cargo">Cargo:</label>
+        <input type="text" id="cargo" required><br>
+        
+        <button type="submit">Gravar Empregado</button>
+    </form>
+
+    <script>
+        function gravarEmpregado() {
+            var cpf = document.getElementById('cpf').value;
+            var nome = document.getElementById('nome').value;
+            var dataAdmissao = document.getElementById('dataAdmissao').value;
+            var cargo = document.getElementById('cargo').value;
+
+            var dadosEmpregado = {
+                cpf: cpf,
+                nome: nome,
+                dataAdmissao: dataAdmissao,
+                cargo: cargo
+            };
+
+            fetch('http://localhost:5000/api/employees', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic Y2Fpb19yYW1vczpqb3NlMTIz',
+                },
+                body: JSON.stringify(dadosEmpregado)
+
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed adding employee');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Successfully added employee');
+                document.getElementById('formEmpregado').reset();
+            })
+            .catch(error => {
+                alert('Failed adding employee. check the data fields and try again.');
+            });
+        }
+    </script>
+</body>
+</html>
